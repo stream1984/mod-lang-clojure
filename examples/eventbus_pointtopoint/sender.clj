@@ -24,5 +24,9 @@
  (let [msg (str "some-message-" (swap! msg-count inc))]
    (eb/send address msg
             (fn [reply]
+<<<<<<< HEAD
               (println "received:" (eb/body reply))))
+=======
+              (println "received:" reply)))
+>>>>>>> tobias-master
    (println "sent message" msg)))

@@ -12,6 +12,7 @@
 ;; See the License for the specific language governing permissions and
 ;; limitations under the License.
 
+<<<<<<< HEAD
 (ns vertx.http
   (:require [vertx.http :as http]))
 
@@ -21,6 +22,13 @@
                     (http/on-body resp
                                   (fn [buf]
                                     (println (.toString buf)))))))
+=======
+(ns example.https.client
+  (:require [vertx.http :as http]))
+
+(-> (http/client {:SSL true :trust-all true :port 4443 :host "localhost"})
+    (http/get-now "/" #(http/on-body % println)))
+>>>>>>> tobias-master
 
 
 

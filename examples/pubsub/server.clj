@@ -22,6 +22,7 @@
 
 
 (defn connect-handler [sock]
+<<<<<<< HEAD
   (let [parser
         (buf/parse-delimited
          "/n" (fn [line]
@@ -42,7 +43,38 @@
                                      (bus/send target content)))
                       (str "unexpected value " (first line-vec))))))]
     (stream/on-data sock parser)))
+=======
+  (stream/on-data
+   sock
+   (fn [buf!]
+     (buf/parse-delimited
+      buf! "\n"
+      (fn [line]
+        (let [[cmd topic msg] (-> line str string/trim (string/split #","))
+              topic-set! (and topic (shared/get-set topic))
+              sock-id (.writeHandlerID sock)]
+          (condp = cmd
+            "subscribe" (do
+                          (println "subscribing to" topic)
+                          (shared/add! topic-set! sock-id))
+
+            "unsubscribe" (do
+                            (println "unsubscribing from" topic)
+                            (shared/remove! topic-set! sock-id))
+
+            "publish" (do
+                        (println "publishing to" topic "with" msg)
+                        (doseq [target topic-set!]
+                          (bus/send target (buf/buffer (str msg "\n")))))
+            
+            (stream/write sock (format "unknown command: %s\n" cmd)))))))))
+>>>>>>> tobias-master
 
 (-> (net/server)
     (net/on-connect connect-handler)
     (net/listen 1234))
+<<<<<<< HEAD
+=======
+
+(println "Starting TCP pub-sub server on localhost:1234")
+>>>>>>> tobias-master

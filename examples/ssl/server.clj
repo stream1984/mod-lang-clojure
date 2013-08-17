@@ -23,6 +23,13 @@
     (net/on-connect
      (fn [sock]
        (stream/on-data sock
+<<<<<<< HEAD
                        (fn [buf]
                          (net/write sock buf)))))
     (net/listen 1234 "localhost" (println "Start Net Server with SSL on localhost 1234")))
+=======
+                       (partial stream/write sock))))
+    (net/listen 1234 "localhost"))
+
+(println "Starting Net Server with SSL on localhost 1234")
+>>>>>>> tobias-master

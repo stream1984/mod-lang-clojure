@@ -14,6 +14,7 @@
 
 (ns example.webscokets.web-socket
   (:require [vertx.http :as http]
+<<<<<<< HEAD
             [vertx.stream :as stream]))
 
 (defn ws-data-handler [ws buf]
@@ -29,3 +30,23 @@
                        (when (= "/" (http/path req))
                          (http/send-file (http/server-response req) "websockets/ws.html"))))
     (http/listen 8080 "localhost" (println "String http Server on localhost:8080")))
+=======
+            [vertx.http.websocket :as ws]
+            [vertx.stream :as stream]))
+
+(-> (http/server)
+    (http/on-request
+     (fn [req]
+       (when (= "/" (.path req))
+         (http/send-file (http/server-response req)
+                         "websockets/ws.html"))))
+    
+    (ws/on-websocket
+     (fn [ws] (if (= "/myapp" (.path ws))
+                (stream/on-data ws (partial ws/write-text-frame ws))
+                (.reject ws))))
+
+    (http/listen 8080 "localhost"))
+
+(println "Http server on localhost:8080")
+>>>>>>> tobias-master

@@ -17,8 +17,13 @@
 
 (def address "example.address")
 
-(eb/register-handler
+(eb/on-message
  address
  (fn [msg]
+<<<<<<< HEAD
    (println "Received message" (eb/body msg))
    (eb/reply msg (str "pong:" (eb/body msg)))))
+=======
+   (println "Received message" msg)
+   (eb/reply msg (str "pong:" msg))))
+>>>>>>> tobias-master

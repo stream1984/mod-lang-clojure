@@ -19,6 +19,7 @@
 
 
 (defn write-data [req]
+<<<<<<< HEAD
   (dotimes [n 10] (http/write req (str "client-data-chunk-" n))) req)
 
 (-> (http/client {:port 8080 :host "localhost"})
@@ -31,3 +32,16 @@
     (http/request-prop {:chunked true})
     (write-data)
     (http/end))
+=======
+  (dotimes [n 10]
+    (stream/write req (str "client-data-chunk-" n))) req)
+
+(-> (http/client {:port 8080 :host "localhost"})
+    (http/put "/some-url"
+              #(stream/on-data %
+                               (partial
+                                (println "Got response data"))))
+    (.setChunked true)
+    write-data
+    http/end)
+>>>>>>> tobias-master

@@ -2,19 +2,47 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.vertx</groupId>
-  <artifactId>lang-clojure</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <name>Clojure Vert.x module</name>
+  <artifactId>lang-clojure-parent</artifactId>
+  <version>0.2.0-SHAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Clojure Vert.x support parent</name>
   <parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>7</version>
   </parent>
+  <modules>
+    <module>api</module>
+    <module>lang-module</module>
+  </modules>
+
+  <licenses>
+    <license>
+      <name>Apache License - v 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>tcrawey</id>
+      <name>Toby Crawley</name>
+      <email>toby@tcrawley.org</email>
+    </developer>
+    <developer>
+      <id>stream</id>
+      <email>stream1984@gmail.com</email>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git@github.com:vert-x/mod-lang-clojure.git</connection>
+    <developerConnection>scm:git:git@github.com:vert-x/mod-lang-clojure.git</developerConnection>
+    <url>https://github.com/vert-x/mod-lang-clojure/</url>
+  </scm>
 
   <properties>
-    <!-- vert.x module name -->
-    <module.name>${project.groupId}~${project.artifactId}~${project.version}</module.name>
-
     <!-- encodings -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -33,9 +61,10 @@
     <version.codox>0.6.3.1</version.codox>
 
     <!-- dependency versions -->
-    <version.vertx>2.0.0-CR3</version.vertx>
+    <version.vertx>2.0.1-final</version.vertx>
     <version.vertx.testtools>2.0.0-final</version.vertx.testtools>
-    <version.clojure>1.5.1</version.clojure>
+    <version.shimdandy>1.0.1</version.shimdandy>
+    <version.clojure>1.6.0-clearthreadlocals</version.clojure>
     <version.json>0.2.2</version.json>
     <version.nrepl>0.2.3</version.nrepl>
     <version.clj-stacktrace>0.2.5</version.clj-stacktrace>
@@ -50,50 +79,87 @@
     </repository>
   </repositories>
 
-  <dependencies>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-core</artifactId>
-      <version>${version.vertx}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-platform</artifactId>
-      <version>${version.vertx}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>clojure</artifactId>
-      <version>${version.clojure}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>data.json</artifactId>
-      <version>${version.json}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>tools.nrepl</artifactId>
-      <version>${version.nrepl}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>clj-stacktrace</groupId>
-      <artifactId>clj-stacktrace</artifactId>
-      <version>${version.clj-stacktrace}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>clojure-complete</groupId>
-      <artifactId>clojure-complete</artifactId>
-      <version>${version.clojure-complete}</version>
-      <scope>compile</scope>
-    </dependency>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-core</artifactId>
+        <version>${version.vertx}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-platform</artifactId>
+        <version>${version.vertx}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.projectodd.shimdandy</groupId>
+        <artifactId>shimdandy-api</artifactId>
+        <version>${version.shimdandy}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.projectodd.shimdandy</groupId>
+        <artifactId>shimdandy-impl</artifactId>
+        <version>${version.shimdandy}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.clojars.tcrawley</groupId>
+        <artifactId>clojure</artifactId>
+        <version>${version.clojure}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.clojure</groupId>
+        <artifactId>data.json</artifactId>
+        <version>${version.json}</version>
+        <!-- we have to exclude clojure to prevent v1.3.0 from getting brought in
+             while we depend on a fork of clojure above -->
+        <exclusions>
+          <exclusion>
+            <groupId>org.clojure</groupId>
+            <artifactId>clojure</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.clojure</groupId>
+        <artifactId>tools.nrepl</artifactId>
+        <version>${version.nrepl}</version>
+        <!-- we have to exclude clojure to prevent v1.3.0 from getting brought in
+             while we depend on a fork of clojure above -->
+        <exclusions>
+          <exclusion>
+            <groupId>org.clojure</groupId>
+            <artifactId>clojure</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>clj-stacktrace</groupId>
+        <artifactId>clj-stacktrace</artifactId>
+        <version>${version.clj-stacktrace}</version>
+        <!-- we have to exclude clojure to prevent v1.3.0 from getting brought in
+             while we depend on a fork of clojure above -->
+        <exclusions>
+          <exclusion>
+            <groupId>org.clojure</groupId>
+            <artifactId>clojure</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>clojure-complete</groupId>
+        <artifactId>clojure-complete</artifactId>
+        <version>${version.clojure-complete}</version>
+        <!-- we have to exclude clojure to prevent v1.3.0 from getting brought in
+             while we depend on a fork of clojure above -->
+        <exclusions>
+          <exclusion>
+            <groupId>org.clojure</groupId>
+            <artifactId>clojure</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
 
+<<<<<<< HEAD
     
     <!-- test dependencies -->
     <dependency>
@@ -118,7 +184,29 @@
   </dependencies>
 
   <build>
+=======
+      <!-- test dependencies -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.8.2</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>testtools</artifactId>
+        <version>${version.vertx.testtools}</version>
+      </dependency>
+>>>>>>> tobias-master
 
+      <dependency>
+        <groupId>org.clojars.tcrawley</groupId>
+        <artifactId>codox.core</artifactId>
+        <version>${version.codox}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -137,6 +225,7 @@
       </extension>
     </extensions>
     <plugins>
+<<<<<<< HEAD
     
       <plugin>
         <groupId>com.theoryinpractise</groupId>
@@ -165,6 +254,8 @@
           </execution>
         </executions>
       </plugin>
+=======
+>>>>>>> tobias-master
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -191,6 +282,7 @@
           <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
       </plugin>
+<<<<<<< HEAD
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
@@ -258,6 +350,9 @@
           </execution>
         </executions>
       </plugin>
+=======
+
+>>>>>>> tobias-master
       <plugin>
         <groupId>com.googlecode.maven-java-formatter-plugin</groupId>
         <artifactId>maven-java-formatter-plugin</artifactId>
@@ -267,88 +362,7 @@
           <lineEnding>LF</lineEnding>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${maven.surefire.plugin.version}</version>
-        <configuration>
-          <disableXmlReport>true</disableXmlReport>
-          <argLine>-Xss2048k</argLine>
-          <verbose>true</verbose>
-          <includes>
-            <include>**/unit/*Test*.java</include>
-          </includes>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>${maven.failsafe.plugin.version}</version>
-        <configuration>
-          <systemProperties>
-            <property>
-              <name>vertx.mods</name>
-              <value>target/mods</value>
-            </property>
-            <property>
-              <name>vertx.test.timeout</name>
-              <value>15</value>
-            </property>            
-          </systemProperties>
-          <environmentVariables>
-            <cheese>Gouda</cheese>
-          </environmentVariables>
-          <includes>
-            <include>**/integration/**</include>
-          </includes>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>${maven.assembly.plugin.version}</version>
-        <configuration>
-          <appendAssemblyId>false</appendAssemblyId>
-          <descriptors>
-            <descriptor>src/main/assembly/mod.xml</descriptor>
-          </descriptors>
-          <attach>true</attach>
-        </configuration>
-        <executions>
-          <execution>
-            <id>assemble</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <version>${maven.clean.plugin.version}</version>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>${basedir}/build/mods</directory>
-            </fileset>
-            <fileset>
-              <directory>${basedir}/target/mods</directory>
-            </fileset>
-            <fileset>
-              <directory>${basedir}/target/docs</directory>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>

@@ -178,7 +178,11 @@ You should use `vertx.core/deploy-module` to deploy a module, for example:
 
 Would deploy an instance of the `io.vertx~mod-mailer~2.0.0-beta1`
 module with the specified configuration map. Please see the
+<<<<<<< HEAD
 [modules manual]() for more information about modules.
+=======
+[modules manual](mods_manual.html) for more information about modules.
+>>>>>>> tobias-master
 
 ## Passing configuration to a verticle programmatically
 
@@ -409,11 +413,19 @@ Let's jump into the API
 ### Registering and Unregistering Handlers
 
 To set a message handler on the address `test.address`, you call the
+<<<<<<< HEAD
 `vertx.eventbus/register-handler` function:
 
     (require '[vertx.eventbus :as eb])
 
     (eb/register-handler "test.address"
+=======
+`vertx.eventbus/on-message` function:
+
+    (require '[vertx.eventbus :as eb])
+
+    (eb/on-message "test.address"
+>>>>>>> tobias-master
       (fn [message]
         (println "Got message body" (eb/body message))))
 
@@ -422,18 +434,30 @@ sent to that address. The object passed into the handler is an
 instance of class `Message`. The body of the message is available via
 the `vertx.eventbus/body` function.
 
+<<<<<<< HEAD
 The return value of `register-handler` is a unique handler id which
+=======
+The return value of `on-message` is a unique handler id which
+>>>>>>> tobias-master
 can used later to unregister the handler.
 
 When you register a handler on an address and you're in a cluster it
 can take some time for the knowledge of that new handler to be
 propagated across the entire cluster. If you want to be notified when
 that has completed you can optionally specify a function to the
+<<<<<<< HEAD
 `register-handler` function as the third argument. This function will then
 be called once the information has reached all nodes of the
 cluster. E.g. :
 
     (eb/register-handler "test.address" my-handler 
+=======
+`on-message` function as the third argument. This function will then
+be called once the information has reached all nodes of the
+cluster. E.g. :
+
+    (eb/on-message "test.address" my-handler 
+>>>>>>> tobias-master
       (fn [err]
         (println "Yippee! The handler info has been propagated across the cluster")))
     
@@ -489,7 +513,11 @@ clear:
 
 The receiver:
 
+<<<<<<< HEAD
     (eb/register-handler "test.address"
+=======
+    (eb/on-message "test.address"
+>>>>>>> tobias-master
       (fn [message]
         (println "I received a message" (eb/body message))
 
@@ -567,8 +595,14 @@ To make each Vert.x instance on your network participate on the same
 event bus, start each Vert.x instance with the `-cluster` command line
 switch.
 
+<<<<<<< HEAD
 See the chapter in the main manual on [*running Vert.x*]() for more
 information on this.
+=======
+See the chapter in the main manual on
+[*running Vert.x*](manual.html#running-vertx) for more information on
+this.
+>>>>>>> tobias-master
 
 Once you've done that, any Vert.x instances started in cluster mode
 will merge to form a distributed event bus.
@@ -576,7 +610,11 @@ will merge to form a distributed event bus.
 # Shared Data
 
 Sometimes it makes sense to allow different verticles instances to
+<<<<<<< HEAD
 share data in a safe way. Vert.x allows simple *Hash* and *Set* data
+=======
+share data in a safe way. Vert.x allows simple *Map* and *Set* data
+>>>>>>> tobias-master
 structures to be shared between verticles. 
 
 There is a caveat: Vert.x ensures that objects are copied where
@@ -593,7 +631,11 @@ for concurrent coordination. If you have a mix of verticles from other
 languages in the same vert.x instance and need to share data, you will
 need to use the vert.x shared data mechanisms.
 
+<<<<<<< HEAD
 ## Shared Hashes
+=======
+## Shared Maps
+>>>>>>> tobias-master
 
 To use a shared map to share data between verticles first get a
 reference to the map, and then we just use map operations to put and
@@ -601,13 +643,21 @@ get the data:
 
     (require '[vertx.shareddata :as sd])
     
+<<<<<<< HEAD
     (-> (sd/get-hash "demo.myhash")
+=======
+    (-> (sd/get-map "demo.mymap")
+>>>>>>> tobias-master
         (sd/put! "some-key" "some-value"))
 
 And then, in a different verticle:
 
     (println "value of some-key is"
+<<<<<<< HEAD
       (-> (sd/get-hash "demo.myhash")
+=======
+      (-> (sd/get-map "demo.mymap")
+>>>>>>> tobias-master
           (get "some-key")))
 
 ## Shared Sets
@@ -619,7 +669,10 @@ reference to the set:
         (sd/add! "some-value"))
 
 And then, in a different verticle:
+<<<<<<< HEAD
 
+=======
+>>>>>>> tobias-master
     
     (println "does the set contain some-value?"
       (-> (sd/get-set "demo.myset")
@@ -630,9 +683,20 @@ its maps and sets (`add!`, `put!`, `remove!`, and `clear!`). For
 retrieving values from the maps/sets, you can use the built-in clojure
 functions (`get`, `contains?`, `count`, `empty?`, etc.).
 
+<<<<<<< HEAD
 Currently, no conversion is performed on keys or values placed in
 shared data. The onus is on you to make sure you are storing a type
 that will be readable in any other verticles that access it.
+=======
+As a convenience, `add!`, `put!`, `remove!`, and `clear!` can be given
+a string or keyword name for a set or map instead of the collection
+object and will look it up.
+
+Currently, no conversion is performed on keys
+or values placed in shared data. The onus is on you to make sure you
+are storing a type that will be readable in any other verticles that
+access it.
+>>>>>>> tobias-master
 
 # Buffers
 
@@ -842,7 +906,11 @@ To tell that server to listen for connections we do:
 The second parameter to `listen` is the port. A wildcard port of `0`
 can be specified which means a random available port will be chosen to
 actually listen at. Once the server has completed listening you can
+<<<<<<< HEAD
 then call the `.port()` method of the server to find out the real port
+=======
+then call the `.port` method of the server to find out the real port
+>>>>>>> tobias-master
 it is using.
 
 The third parameter is the hostname or ip address. If it is omitted
@@ -1052,6 +1120,12 @@ itself. This enables you to write data to a NetSocket which is
 potentially in a completely different verticle or even in a different
 Vert.x instance by sending the buffer to the address of that handler.
 
+<<<<<<< HEAD
+=======
+**Note that you must explicitly write a buffer to
+  `vertx.eventbus/send` when sending to a socket.**
+
+>>>>>>> tobias-master
 The address of the handler is provided by the `.writeHandlerID` Java
 method.
 
@@ -1063,7 +1137,11 @@ different verticle you could do:
     (.writeHandlerID sock)
     
     ;; in another verticle, get the ID and send a buffer
+<<<<<<< HEAD
     (eb/send write-handler-id buffer)
+=======
+    (eb/send write-handler-id (buf/buffer "some data"))
+>>>>>>> tobias-master
 
 
 ### Read and Write Streams
@@ -1609,7 +1687,11 @@ Then `(.query request)` would return the string
 
 The request headers are available using the `.headers` method on the
 request object. The return value of the method is a `MultiMap`. A
+<<<<<<< HEAD
 MultiMap differs from a normal Hash in that it allows multiple values
+=======
+MultiMap differs from a normal map in that it allows multiple values
+>>>>>>> tobias-master
 with the same key.
 
 You can also retrieve the headers as a Clojure map using the
@@ -1776,9 +1858,18 @@ attributes as a Clojure map, using the same conversion rules as
 
 This should only be called after *all* of the request has been read -
 this is because form attributes are encoded in the request *body* not
+<<<<<<< HEAD
 in the request headers.
 
     (stream/on-end request
+=======
+in the request headers. You must also call
+`vertx.http/expect-multi-part` on the request *before* any of the body
+is read in order for the form attributes to be available.
+
+    (stream/on-end request
+      (http/expect-multi-part request)
+>>>>>>> tobias-master
       ;; The request has been full read, so now we can look at the form attributes
       #(do-something-with-form-attributes (http/form-attributes request)))
       
@@ -1813,7 +1904,11 @@ The default value for `:status-code` is `200`.
 
 To write data to an HTTP response, you invoke the `vertx.stream/write`
 function. This function can be invoked multiple times before the
+<<<<<<< HEAD
 response is ended. `write` can either take anything Bufferable, or a
+=======
+response is ended. `write` can either take anything bufferable, or a
+>>>>>>> tobias-master
 String and encoding:
 
 Example:
@@ -1827,7 +1922,11 @@ Example:
 The write methods are asynchronous and always returns immediately
 after the write has been queued.
 
+<<<<<<< HEAD
 If you are just writing a single string or Bufferable to the HTTP
+=======
+If you are just writing a single string or bufferable to the HTTP
+>>>>>>> tobias-master
 response you can write it and end the response in a single call to the
 `vertx.http/end` function.
 
@@ -1850,9 +1949,15 @@ With no arguments, the response is simply ended.
 
     (http/end response)
 
+<<<<<<< HEAD
 The function can also be called with a string or Bufferable in the
 same way `vertx.stream/write` is called. In this case it's just the
 same as calling `write` with a string or Bufferable followed by
+=======
+The function can also be called with a string or bufferable in the
+same way `vertx.stream/write` is called. In this case it's just the
+same as calling `write` with a string or bufferable followed by
+>>>>>>> tobias-master
 calling `end` with no arguments. For example:
 
     
@@ -1950,7 +2055,11 @@ directory:
                         :default "error.html"))))))
         (http/listen 8080))
                     
+<<<<<<< HEAD
 There's also a version of `send-file` which takes the name of a file
+=======
+There's also a variant of `send-file` which takes the name of a file
+>>>>>>> tobias-master
 to serve if the specified file cannot be found:
 
     (http/send-file response (str "web/" file) "handler_404.html")
@@ -2103,7 +2212,11 @@ to the server response body.
 
 To write data to an HTTP request, you invoke the `vertx.stream/write`
 function. This function can be invoked multiple times before the
+<<<<<<< HEAD
 request is ended. `write` can either take anything Bufferable, or a
+=======
+request is ended. `write` can either take anything bufferable, or a
+>>>>>>> tobias-master
 String and encoding:
 
 Example:
@@ -2117,7 +2230,11 @@ Example:
 The write methods are asynchronous and always returns immediately
 after the write has been queued.
 
+<<<<<<< HEAD
 If you are just writing a single string or Bufferable to the HTTP
+=======
+If you are just writing a single string or bufferable to the HTTP
+>>>>>>> tobias-master
 request you can write it and end the request in a single call to the
 `vertx.http/end` function.
 
@@ -2140,9 +2257,15 @@ With no arguments, the request is simply ended.
 
     (http/end request)
 
+<<<<<<< HEAD
 The function can also be called with a string or Bufferable in the
 same way `vertx.stream/write` is called. In this case it's just the
 same as calling `write` with a string or Bufferable followed by
+=======
+The function can also be called with a string or bufferable in the
+same way `vertx.stream/write` is called. In this case it's just the
+same as calling `write` with a string or bufferable followed by
+>>>>>>> tobias-master
 calling `end` with no arguments. For example:
 
     
@@ -2610,6 +2733,7 @@ For more information see the
 
 # SockJS
 
+<<<<<<< HEAD
 WebSockets are a new technology, and many users are still using browsers that do not support them, or which support older, pre-final, versions.
 
 Moreover, WebSockets do not work well with many corporate proxies. This means that's it's not possible to guarantee a WebSocket connection is going to succeed for every user.
@@ -2621,11 +2745,37 @@ SockJS is a client side JavaScript library and protocol which provides a simple 
 It does this by supporting various different transports between browser and server, and choosing one at runtime according to browser and network capabilities. All this is transparent to you - you are simply presented with the WebSocket-like interface which *just works*.
 
 Please see the [SockJS website](https://github.com/sockjs/sockjs-client) for more information.
+=======
+WebSockets are a new technology, and many users are still using
+browsers that do not support them, or which support older, pre-final,
+versions.
+
+Moreover, WebSockets do not work well with many corporate
+proxies. This means that's it's not possible to guarantee a WebSocket
+connection is going to succeed for every user.
+
+Enter SockJS.
+
+SockJS is a client side JavaScript library and protocol which provides
+a simple WebSocket-like interface to the client side JavaScript
+developer irrespective of whether the actual browser or network will
+allow real WebSockets.
+
+It does this by supporting various different transports between
+browser and server, and choosing one at runtime according to browser
+and network capabilities. All this is transparent to you - you are
+simply presented with the WebSocket-like interface which *just works*.
+
+Please see the
+[SockJS website](https://github.com/sockjs/sockjs-client) for more
+information.
+>>>>>>> tobias-master
 
 ## SockJS Server
 
 Vert.x provides a complete server side SockJS implementation.
 
+<<<<<<< HEAD
 This enables vert.x to be used for modern, so-called *real-time* (this is the *modern* meaning of *real-time*, not to be confused by the more formal pre-existing definitions of soft and hard real-time systems) web applications that push data to and from rich client-side JavaScript applications, without having to worry about the details of the transport.
 
 To create a SockJS server you simply create a HTTP server as normal and pass it in to the constructor of the SockJS server.
@@ -2685,6 +2835,94 @@ The object passed into the SockJS handler implements `ReadStream` and `WriteStre
 ## SockJS client
 
 For full information on using the SockJS client library please see the SockJS website. A simple example:
+=======
+This enables vert.x to be used for modern, so-called *real-time* (this
+is the *modern* meaning of *real-time*, not to be confused by the more
+formal pre-existing definitions of soft and hard real-time systems)
+web applications that push data to and from rich client-side
+JavaScript applications, without having to worry about the details of
+the transport.
+
+To create a SockJS server you simply create a HTTP server as normal
+and pass it in to function that creates a SockJS server.
+
+    (require `[vertx.http :as http]
+             `[vertx.http.sockjs :as sockjs])
+             
+    (-> (http/server) (sockjs/sockjs-server))
+
+Each SockJS server can host multiple *applications*.
+
+Each application is defined by some configuration, and provides a
+handler which gets called when incoming SockJS connections arrive at
+the server.
+
+For example, to create a SockJS echo application:
+
+    (let [server (http/server)]
+       (-> (sockjs/sockjs-server server)
+           (sockjs/install-app {:prefix "/echo"}
+             #(stream/on-data % (partial stream/write %))))
+       (http/listen server 8080 "localhost"))
+
+The configuration can take the following fields:
+
+* `:prefix`: A url prefix for the application. All http requests whose
+  paths begins with selected prefix will be handled by the
+  application. This property is mandatory.
+* `:insert_JSESSIONID`: Some hosting providers enable sticky sessions
+  only to requests that have JSESSIONID cookie set. This setting
+  controls if the server should set this cookie to a dummy value. By
+  default setting JSESSIONID cookie is enabled. More sophisticated
+  beaviour can be achieved by supplying a function.
+* `:session_timeout`: The server sends a `close` event when a client
+  receiving connection have not been seen for a while. This delay is
+  configured by this setting. By default the `close` event will be
+  emitted when a receiving connection wasn't seen for 5 seconds.
+* `:heartbeat_period`: In order to keep proxies and load balancers
+  from closing long running http requests we need to pretend that the
+  connecion is active and send a heartbeat packet once in a
+  while. This setting controlls how often this is done. By default a
+  heartbeat packet is sent every 5 seconds.
+* `:max_bytes_streaming`: Most streaming transports save responses on
+  the client side and don't free memory used by delivered
+  messages. Such transports need to be garbage-collected once in a
+  while. `:max_bytes_streaming` sets a minimum number of bytes that can
+  be send over a single http streaming request before it will be
+  closed. After that client needs to open new request. Setting this
+  value to one effectively disables streaming and will make streaming
+  transports to behave like polling transports. The default value is
+  128K.
+* `library_url`: Transports which don't support cross-domain
+  communication natively ('eventsource' to name one) use an iframe
+  trick. A simple page is served from the SockJS server (using its
+  foreign domain) and is placed in an invisible iframe. Code run from
+  this iframe doesn't need to worry about cross-domain issues, as it's
+  being run from domain local to the SockJS server. This iframe also
+  does need to load SockJS javascript client library, and this option
+  lets you specify its url (if you're unsure, point it to the latest
+  minified SockJS client release, this is the default). The default
+  value is `http://cdn.sockjs.org/sockjs-0.3.4.min.js`
+
+## Reading and writing data from a SockJS server
+
+The object passed into the SockJS handler implements `ReadStream` and
+`WriteStream` much like `NetSocket` or `WebSocket`. You can therefore
+use the standard API for reading and writing to the SockJS socket or
+using it in pumps. See the chapter on Streams and Pumps for more
+information.
+
+    (let [server (http/server)]
+       (-> (sockjs/sockjs-server server)
+       (sockjs/install-app {:prefix "/echo"}
+         #(stream/on-data % (partial stream/write %))))
+       (http/listen server 8080 "localhost"))
+
+## SockJS client
+
+For full information on using the SockJS client library please see the
+SockJS website. A simple example:
+>>>>>>> tobias-master
 
     <script>
        var sock = new SockJS('http://mydomain.com/my_prefix');
@@ -2708,6 +2946,7 @@ As you can see the API is very similar to the WebSockets API.
 
 ## Setting up the Bridge
 
+<<<<<<< HEAD
 By connecting up SockJS and the vert.x event bus we create a distributed event bus which not only spans multiple vert.x instances on the server side, but can also include client side JavaScript running in browsers.
 
 We can therefore create a huge distributed bus encompassing many browsers and servers. The browsers don't have to be connected to the same server as long as the servers are connected.
@@ -2737,6 +2976,50 @@ The following example creates and starts a SockJS bridge which will bridge any e
 Once you've set up a bridge, you can use the event bus from the client side as follows:
 
 In your web page, you need to load the script `vertxbus.js`, then you can access the vert.x event bus API. Here's a rough idea of how to use it. For a full working examples, please consult the bundled examples.
+=======
+By connecting up SockJS and the vert.x event bus we create a
+distributed event bus which not only spans multiple vert.x instances
+on the server side, but can also include client side JavaScript
+running in browsers.
+
+We  can therefore  create  a huge  distributed  bus encompassing  many
+browsers and servers.  The browsers don't have to be  connected to the
+same server as long as the servers are connected.
+
+On the server side we have already discussed the event bus API.
+
+We also provide a client side JavaScript library called `vertxbus.js`
+which provides the same event bus API, but on the client side.
+
+This library internally uses SockJS to send and receive data to a
+SockJS vert.x server called the SockJS bridge. It's the bridge's
+responsibility to bridge data between SockJS sockets and the event bus
+on the server side.
+
+Creating a Sock JS bridge is simple. You just call the
+`vertx.http.sockjs/bridge` function with the SockJS server instance.
+
+You will also need to secure the bridge (see below).
+
+The following example creates and starts a SockJS bridge which will
+bridge any events sent to the path `eventbus` on to the server side
+event bus.
+
+    (let [http-server (http/server)]
+      (sockjs/bridge 
+        (sockjs/sockjs-server http-server)
+        {:prefix "/eventbus"} [{}] [{}]) 
+      (http/listen http-server 8080 "localhost"))
+
+## Using the Event Bus from client side JavaScript
+
+Once you've set up a bridge, you can use the event bus from the client
+side as follows:
+
+In your web page, you need to load the script `vertxbus.js`, then you
+can access the vert.x event bus API. Here's a rough idea of how to use
+it. For a full working examples, please consult the bundled examples.
+>>>>>>> tobias-master
 
     <script src="http://cdn.sockjs.org/sockjs-0.3.4.min.js"></script>
     <script src='vertxbus.js'></script>
@@ -2759,6 +3042,7 @@ In your web page, you need to load the script `vertxbus.js`, then you can access
        
     </script>
 
+<<<<<<< HEAD
 You can find `vertxbus.js` in the `client` directory of the vert.x distribution.
 
 The first thing the example does is to create a instance of the event bus
@@ -2770,11 +3054,33 @@ The parameter to the constructor is the URI where to connect to the event bus. S
 You can't actually do anything with the bridge until it is opened. When it is open the `onopen` handler will be called.
 
 The client side event bus API for registering and unregistering handlers and for sending messages is exactly the same as the server side one. Please consult the JavaScript core manual chapter on the EventBus for a description of that API.
+=======
+You can find `vertxbus.js` in the `client` directory of the vert.x
+distribution.
+
+The first thing the example does is to create a instance of the event
+bus:
+
+    var eb = new vertx.EventBus('http://localhost:8080/eventbus')
+
+The parameter to the constructor is the URI where to connect to the
+event bus. Since we create our bridge with the prefix `eventbus` we
+will connect there.
+
+You can't actually do anything with the bridge until it is
+opened. When it is open the `onopen` handler will be called.
+
+The client side event bus API for registering and unregistering
+handlers and for sending messages is exactly the same as the server
+side one. Please consult the JavaScript core manual chapter on the
+EventBus for a description of that API.
+>>>>>>> tobias-master
 
 **There is one more thing to do before getting this working, please read the following section....**
 
 ## Securing the Bridge
 
+<<<<<<< HEAD
 If you started a bridge like in the above example without securing it, and attempted to send messages through it you'd find that the messages mysteriously disappeared. What happened to them?
 
 For most applications you probably don't want client side JavaScript being able to send just any message to any verticle on the server side or to all other browsers.
@@ -2802,10 +3108,73 @@ When a message arrives at the bridge, it will look through the available permitt
 * If an `address` field has not been specified and an `address_re` field has been specified then the regular expression in `address_re` must match with the address of the message for it to be considered matched.
 
 * If a `match` field has been specified, then also the structure of the message must match.
+=======
+If you started a bridge like in the above example without securing it,
+and attempted to send messages through it you'd find that the messages
+mysteriously disappeared. What happened to them?
+
+For most applications you probably don't want client side JavaScript
+being able to send just any message to any verticle on the server side
+or to all other browsers.
+
+For example, you may have a persistor verticle on the event bus which
+allows data to be accessed or deleted. We don't want badly behaved or
+malicious clients being able to delete all the data in your database!
+Also, we don't necessarily want any client to be able to listen in on
+any topic.
+
+To deal with this, a SockJS bridge will, by default refuse to let
+through any messages. It's up to you to tell the bridge what messages
+are ok for it to pass through. (There is an exception for reply
+messages which are always allowed through).
+
+In other words the bridge acts like a kind of firewall which has a
+default *deny-all* policy.
+
+Configuring the bridge to tell it what messages it should pass through
+is easy. You pass in two arrays of JSON objects (represented by maps)
+that represent *matches*, as the final argument in the call to
+`bridge`.
+
+The first array is the *inbound* list and represents the messages that
+you want to allow through from the client to the server. The second
+array is the *outbound* list and represents the messages that you want
+to allow through from the server to the client.
+
+Each match can have up to three fields:
+
+1. `:address`: This represents the exact address the message is being
+   sent to. If you want to filter messages based on an exact address
+   you use this field.
+2. `:address_re`: This is a regular expression that will be matched
+   against the address. If you want to filter messages based on a
+   regular expression you use this field. If the `address` field is
+   specified this field will be ignored.
+3. `:match`: This allows you to filter messages based on their
+   structure. Any fields in the match must exist in the message with
+   the same values for them to be passed. This currently only works
+   with JSON messages.
+
+When a message arrives at the bridge, it will look through the
+available permitted entries.
+
+* If an `:address` field has been specified then the `:address` must
+  match exactly with the address of the message for it to be
+  considered matched.
+
+* If an `:address` field has not been specified and an `:address_re`
+  field has been specified then the regular expression in `:address_re`
+  must match with the address of the message for it to be considered
+  matched.
+
+* If a `:match` field has been specified, then also the structure of
+  the message must match.
+>>>>>>> tobias-master
 
 
 Here is an example:
 
+<<<<<<< HEAD
     server = Vertx::HttpServer.new
     
     sockJSServer = Vertx::SockJSServer.new(server)
@@ -2850,11 +3219,42 @@ Here is an example:
 To let all messages through you can specify two arrays with a single empty JSON object which will match all messages.
 
      sockJSServer.bridge({'prefix' => '/eventbus'}, [{}], [{}])
+=======
+    (let [http-server (http/server)
+          sockjs-server 
+          auth-inbound [
+                     ;;Let through any messages sent to 'demo.orderMgr'
+                     {:address "demo.orderMgr"}
+                     
+                     ;; Allow calls to the address 'demo.persistor' as long as the messages
+                     ;; have an action field with value 'find' and a collection field with value
+                     ;; 'albums'
+                     {:address "demo.persistor" :match {:action "find" :collection "albums"}}
+                     
+                     ;; Allow through any message with a field `wibble` with value `foo`.
+                     {:match {:wibble "foo"}}]
+          auth-outbound [
+                     ;; Let through any messages coming from address 'ticker.mystock'
+                     {:address "ticker.mystock"}
+                     
+                     ;;Let through any messages from addresses starting with "news." (e.g. news.europe, news.usa, etc)
+                     {:address_re "news\\..+"}]
+        (sockjs/bridge 
+          (sockjs/sockjs-server http-server)
+          {:prefix "/eventbus"} auth-inbound auth-outbound) 
+        (http/listen http-server 8080 "localhost"))
+
+To let all messages through you can specify two arrays with a single
+empty JSON object which will match all messages.
+
+     (sockjs/bridge sockjs-server {:prefix "/eventbus"} [{}] [{}]) 
+>>>>>>> tobias-master
 
 **Be very careful!**
 
 ## Messages that require authorisation
 
+<<<<<<< HEAD
 The bridge can also refuse to let certain messages through if the user is not authorised.
 
 To enable this you need to make sure an instance of the `vertx.auth-mgr` module is available on the event bus. (Please see the modules manual for a full description of modules).
@@ -2871,6 +3271,32 @@ To tell the bridge that certain messages require authorisation before being pass
     }
     
 This tells the bridge that any messages to save orders in the `orders` collection, will only be passed if the user is successful authenticated (i.e. logged in ok) first.       
+=======
+The bridge can also refuse to let certain messages through if the user
+is not authorised.
+
+To enable this you need to make sure an instance of the
+`vertx.auth-mgr` module is available on the event bus. (Please see the
+modules manual for a full description of modules).
+
+To tell the bridge that certain messages require authorisation before
+being passed, you add the field `:requires_auth` with the value of
+`true` in the match. The default value is `false`. For example, the
+following match:
+
+    {
+      :address "demo.persistor"
+      :match {
+        :action "find"
+        :collection "albums"
+      }
+      :requires_auth true
+    }
+    
+This tells the bridge that any messages to find orders in the `albums`
+collection, will only be passed if the user is successful
+authenticated (i.e. logged in ok) first.
+>>>>>>> tobias-master
 
 # File System
 
@@ -3126,7 +3552,11 @@ Writes data to a new file on disk.
 
 `(write-file file data handler)` 
 
+<<<<<<< HEAD
 Where `file` is the file name. `data` is anything Bufferable.
+=======
+Where `file` is the file name. `data` is anything bufferable.
+>>>>>>> tobias-master
 `handler` is called with the error, or `nil` if successful.
 
 ## create_file
@@ -3209,7 +3639,11 @@ To use an AsyncFile for random access writing you use the
 The parameters to the function are: 
 
 * `file-obj`: the `AsyncFile`.
+<<<<<<< HEAD
 * `data`: the data to write. Can be anything Bufferable.
+=======
+* `data`: the data to write. Can be anything bufferable.
+>>>>>>> tobias-master
 * `position`: an integer position in the file where to write the
   buffer. If the position is greater or equal to the size of the file,
   the file will be enlarged to accomodate the offset.

@@ -20,6 +20,7 @@
 
 (defn handle-file [async-file req]
   (let [pump (stream/pump req async-file)]
+<<<<<<< HEAD
     (stream/on-end req #(fs/close async-file
                                     (fn [err]
                                       (if (nil? err)
@@ -37,6 +38,27 @@
                             (handle-file res req)
                             (.printStackTrace (.cause err)))))
     (stream/resume req)))
+=======
+    (stream/on-end
+     req
+     (fn []
+       (fs/close async-file
+                 (fn [err]
+                   (if err
+                     (throw err)
+                     (println "Uploaded" (.bytesPumped pump) "bytes"))))
+       (http/end (http/server-response req)))))
+  (.resume req))
+
+(defn req-handler [req]
+  (.pause req)
+  (fs/open
+   (str "upload/file-" (u/uuid) ".upload")
+   (fn [err f]
+     (if err
+       (throw err)
+       (handle-file f req)))))
+>>>>>>> tobias-master
 
 (-> (http/server)
     (http/on-request req-handler)
